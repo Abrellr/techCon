@@ -1,5 +1,13 @@
-<?php include('../database/connection.php');
+<?php
+session_start();
+if (!isset($_SESSION['email'])) {
+    header('Location: login_page.php?error=please login first');
+}
+
+include('../database/connection.php');
 include('../components/header.php') ?>
+
+
 
 <div class="tableContainer container-fluid d-flex justify-content-center flex-column">
     <h2 class="text-center">Teilnehmerliste</h2>
@@ -16,8 +24,8 @@ include('../components/header.php') ?>
         </thead>
         <?php
         //the query to get all participants
-        $sql = "SELECT *
-        FROM participants;";
+        $sql = "SELECT participants.*, workshop_name 
+        FROM participants JOIN rooms ON participants.room_id = rooms.id;";
         $result = mysqli_query($link, $sql);
 
         //check if query success
@@ -31,7 +39,7 @@ include('../components/header.php') ?>
                 <td>$row[nachname]</td>
                 <td>$row[email]</td>
                 <td>$row[firma]</td>
-                <td>$row[room_id]</td>
+                <td>$row[workshop_name]</td>
                 </tr>
                 </tbody>";
             }
